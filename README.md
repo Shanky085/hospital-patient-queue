@@ -1,71 +1,132 @@
-# Hospital Patient Priority Queue Management System
+# Hospital Patient Priority Queue
 
-A robust, console-based C application that simulates an emergency room patient queue. The system prioritizes patients based on their condition severity, ensuring those with life-threatening needs are treated first using a dynamically sorted Linked List.
+A console-based Hospital Queue Management System using Priority-based Singly Linked Lists in C.
 
-## 🏥 Project Overview
-In a busy hospital, patients arrive continuously but must be treated based on medical urgency rather than a "first-come, first-served" basis. This project builds a **Priority Queue** to manage patient intake, prioritize critical cases, and provide an organized interface for hospital staff to manage incoming flow.
+![Language](https://img.shields.io/badge/Language-C-blue.svg)
+![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-lightgrey.svg)
+
+## Overview
+This project simulates an emergency hospital triage system. Instead of treating patients strictly on a first-come, first-served basis, patients are managed in a priority queue backed by an actively sorting singly linked list. When a new patient arrives, they are inserted dynamically according to the severity of their condition. The hospital staff can then treat "the next critical patient," assuring those with life-threatening needs are always placed at the front (`head`) of the queue.
 
 ---
 
-## 🏗 Data Structure
-This program implements a **Singly Linked List** where each node serves as a patient record. The linked list is kept sorted based on the condition's priority rating, guaranteeing the `O(n)` insertion maintains the most critical patient at the `head` of the queue.
+## Features
+- **Insert patient with priority**: Append records in automatically sorted order (`1` Emergency, `2` Critical, `3` Normal, `4` General).
+- **Display all patients sorted by priority**: View the entire queue to see who is next.
+- **Treat highest priority patient first**: Removes the patient at the head of the list.
+- **Delete patient by ID**: Remove anyone who cancels or leaves triage early.
+- **Search patient by ID**: Find details using a unique identifier.
+- **Reverse the queue**: Invert the sorting order of the list.
+- **Find middle patient using Floyd's algorithm**: Uses the fast/slow (hare & tortoise) pointer technique.
+- **Show statistics**: Detailed counters for total patients and breakdown by specific status (Emergency, Critical, Normal, General count).
+- **Save and load from file (data persistence)**: Patient queue logic automatically stores and remembers existing records from a localized `patients.txt` file across program restarts!
+
+---
+
+## Data Structure
+The core of this system relies on a **Singly Linked List** configured for prioritized insertion. 
+
+Each time a new patient structure is created, the system begins scanning at the `head`. The traversal continues only as long as existing nodes have a higher priority (lower numeric value) than the new patient. The new node is then spliced exactly in front of the first recorded patient with a lesser condition severity, keeping it sorted dynamically without running complete array sorts `O(n log n)`.
 
 ```c
 struct patient
 {
-    int id;                // Unique patient identifier
-    char name[50];         // Patient's full name
-    int age;               // Patient age
-    int priority;          // Medical severity (1 = Highest Priority)
-    struct patient *next;  // Pointer to the next prioritized patient
+    int id;                
+    char name[50];         
+    int age;               
+    int priority;          
+    struct patient *next;  
 };
 ```
 
 ---
 
-## ✨ Features
-1. **Insert Patient**: Append patients to the queue with automatic sorting based on severity (Emergency, Critical, Normal, General). Also prevents duplicate patient IDs.
-2. **Display Queue**: View the real-time queue hierarchy of who is next.
-3. **Treat First Patient**: Dequeues the highest priority patient from the front (`head`) for treatment.
-4. **Delete By ID**: Remove a patient who left or cancelled from anywhere in the queue.
-5. **Search Patient**: Look up a specific patient's details using their unique ID.
-6. **Reverse Queue**: Inverts the Linked List order.
-7. **Find Middle**: Locates the patient exactly in the middle of the queue using the "Tortoise and Hare" fast/slow pointer technique.
-8. **Show Statistics**: Displays a breakdown of total patients and a summary of how many belong to each medical priority level.
-9. **Update Patient**: Safely modify an existing patient's details and resort their priority standing.
-10. **Persistent Storage**: Save the queue to a `patients.txt` file and load it automatically upon restarting the application!
+## Time Complexity Table
+A breakdown of the algorithm efficiencies handling the list interactions:
+
+| Operation    | Time Complexity | Description |
+| -------- | ------- |------- |
+| **Insert** | `O(n)` | Must traverse the list sequentially to find the correct priority gap |
+| **Delete** | `O(n)` | Sequential search needed to reach the target ID before deletion |
+| **Search** | `O(n)` | Must touch each node in the worst-case scenario (item at the tail) |
+| **Display** | `O(n)` | Will iterate through the entire linked list to print each node |
+| **Find Middle** | `O(n)` | Floyd's algorithm uses pointers skipping 2 nodes, but still proportional to list size |
 
 ---
 
-## 💻 How to Compile and Run
+## How to Compile and Run
+You need a `gcc` compiler on your path to run this program. 
 
-### On Windows (using GCC/MinGW)
-1. Open your Command Prompt or PowerShell in the project directory.
-2. Compile the source code:
-   ```cmd
-   gcc hospital.c -o hospital.exe
-   ```
-3. Run the executable:
-   ```cmd
-   hospital.exe
-   ```
+**Windows:**
+```cmd
+gcc hospital.c -o hospital.exe && hospital.exe
+```
 
-### On Linux (using GCC)
-1. Open your terminal in the project directory.
-2. Compile the source code:
-   ```bash
-   gcc hospital.c -o hospital
-   ```
-3. Run the compiled output:
-   ```bash
-   ./hospital
-   ```
+**Linux:**
+```bash
+gcc hospital.c -o hospital && ./hospital
+```
 
 ---
 
-## 📸 Sample Output Placeholder
+## Sample Output
+Below is an example detailing patient entry sorting by strict priority values:
 
-![Sample Program Output placeholder](https://via.placeholder.com/800x400.png?text=Hospital+Management+Console+Output+Screenshot+Placeholder)
+### Console Output
+```text
+1 Insert Patient
+2 Display Queue
+3 Treat First Patient
+4 Delete By ID
+5 Search Patient
+6 Reverse Queue
+7 Find Middle
+8 Show Statistics
+9 Save and Exit
+10 Update Patient
+Enter choice: 1
+Enter ID: 101
+Enter Name: John Doe
+Enter Age: 45
+Select Priority
+1 Emergency
+2 Critical
+3 Normal
+4 General
+3
+```
+**(Assume entering IDs 102 as General and 103 as Critical)...**
+
+```text
+Enter choice: 2
+
+ID   Name         Age   Priority
+---------------------------------
+103   Jane Smith   29   Critical
+101   John Doe     45   Normal
+102   Bob Ross     52   General
+```
+
+```text
+Enter choice: 8
+Total Patients: 3
+Emergency Patients: 0
+Critical Patients: 1
+Normal Patients: 1
+General Patients: 1
+```
 
 ---
-*Built as a Data Structures and Algorithms (DSA) practical implementation project.*
+
+## Project Structure
+```text
+DSA project/
+├── hospital.c        # Main source code logic & data structures implementation
+├── patients.txt      # Data persistence flat-file database
+├── .gitignore        # Ignores compilation outputs (.exe, .o) and database
+└── README.md         # Project documentation (You are here!)
+```
+
+---
+**Author:** Shanky Pal — 1st Year B.Tech CSE Student  
+**GitHub:** [Shanky085](https://github.com/Shanky085)
