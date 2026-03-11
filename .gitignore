@@ -1,0 +1,9 @@
+# Compiled Object files
+*.o
+
+# Executables
+*.exe
+*.out
+
+# Project Data Sources
+patients.txt
